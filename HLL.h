@@ -45,34 +45,7 @@ class LL
     public:
         LL():root{nullptr}{}
         LL(BaseNode* _root):root{_root}{}
-        LL(LL& l)
-        {
-            if(l.root != nullptr)
-            {
-                this->root = l.root->clone();
-                BaseNode* tmp = l.root;
-                BaseNode* ntmp = this->root;
-                BaseNode* ntmp_n;
-                if(tmp->next != nullptr)
-                {
-                    do
-                    {
-                        tmp = tmp->next;
-                        ntmp_n = tmp->clone();
-                        ntmp->link_n(ntmp_n);
-                        ntmp_n->link_f(ntmp);
-                        ntmp = ntmp_n;
-                    } while (tmp->next != l.root);
-                    ntmp->link_n(this->root);
-                    this->root->link_f(ntmp);
-                }
-            }
-            else
-            {
-                this->root = nullptr;
-            }
-            
-        }
+        LL(LL& l);
         ~LL();
         // Construct from legal string
         LL(string& s);
@@ -80,7 +53,7 @@ class LL
         ostream& r_traverse(ostream& s);
         void insert(BaseNode* t,int pos=0,bool tag=true);
         void remove(int pos=-1);
-        void merge(BaseNode* r);
+        void merge(LL& l);
 
         BaseNode* root;
 };

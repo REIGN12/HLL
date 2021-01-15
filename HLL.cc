@@ -76,6 +76,35 @@ LL::LL(string& s)
     }
 }
 
+LL::LL(LL& l)
+{
+    if(l.root != nullptr)
+    {
+        this->root = l.root->clone();
+        BaseNode* tmp = l.root;
+        BaseNode* ntmp = this->root;
+        BaseNode* ntmp_n;
+        if(tmp->next != nullptr)
+        {
+            do
+            {
+                tmp = tmp->next;
+                ntmp_n = tmp->clone();
+                ntmp->link_n(ntmp_n);
+                ntmp_n->link_f(ntmp);
+                ntmp = ntmp_n;
+            } while (tmp->next != l.root);
+            ntmp->link_n(this->root);
+            this->root->link_f(ntmp);
+        }
+    }
+    else
+    {
+        this->root = nullptr;
+    }
+}
+
+
 LL::~LL()
 {
     if(root != nullptr)
@@ -131,9 +160,10 @@ ostream& LL::r_traverse(ostream& s)
 }
 
 /*  
-    INSERT an element before or after pos
+    INSERT an element before or after pos( true: before, false: after)
     if pos is negative means reversingly traverse
     default args means insert before the root 
+    if pos=-1, tag=false means append the ele after the last
 */
 void LL::insert(BaseNode* t, int pos ,bool tag )
 {
@@ -144,18 +174,34 @@ void LL::insert(BaseNode* t, int pos ,bool tag )
     BaseNode* tmp1;
     if(tag)
     {
-        tmp1 = tmp->forward;
-        t->link(tmp1,tmp);
-        tmp1->link_n(t);
-        tmp->link_f(t);
+        if(root->next == nullptr)
+        {
+            root->link(t,t);
+            t->link(root,root);
+        }
+        else
+        {
+            tmp1 = tmp->forward;
+            t->link(tmp1,tmp);
+            tmp1->link_n(t);
+            tmp->link_f(t);
+        }
         if(pos == 0) root = t;
     }
     else
     {
-        tmp1 = tmp->next;
-        t->link(tmp,tmp1);
-        tmp1->link_f(t);
-        tmp->link_n(t);
+        if(root->next == nullptr)
+        {
+            root->link(t,t);
+            t->link(root,root);
+        }
+        else
+        {
+            tmp1 = tmp->next;
+            t->link(tmp,tmp1);
+            tmp1->link_f(t);
+            tmp->link_n(t);
+        }
     }
 }
 
@@ -187,39 +233,21 @@ void LL::remove(int pos )
 /*
     merge 2 LL
 */
-void LL::merge(BaseNode* r)
+void LL::merge(LL& l)
 {
-    if(root == nullptr) {root = r;return;}
-    if(root -> next == nullptr)
+    if(l.root == nullptr) return;
+    if(l.root->next == nullptr)
     {
-        root ->next = r;
-        if(r -> next == nullptr)
-        {
-            root->forward = r;
-            r->link(root,root);
-        }
-        else
-        {
-            root->link_f(r->forward);
-            r->forward->link_n(root);
-            r->link_f(root);
-        }
-        
+        if(this->root->next != nullptr) this->insert(l.root->clone(),-1,false);
+        else this->insert(l.root->clone(),0,false);
     }
     else
     {
-        root->forward->link_n(r);
-        if(r->next == nullptr)
+        BaseNode* tmp = l.root;
+        do
         {
-            r->link(root->forward,root);
-            root->link_f(r);
-        }
-        else
-        {
-           BaseNode* tmp = r->forward;
-           r->link_f(root->forward);
-           tmp->link_n(root);
-           root->link_f(tmp); 
-        }
+            this->insert(tmp->clone(),-1,false);
+            tmp = tmp->next;
+        } while (tmp != l.root);        
     }
 }
