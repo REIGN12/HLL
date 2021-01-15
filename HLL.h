@@ -1,3 +1,5 @@
+#pragma once
+
 #include<iostream>
 #include<string>
 #include<regex>
@@ -42,8 +44,9 @@ class LL
         LL(string& s);
         ostream& traverse(ostream& s);
         ostream& r_traverse(ostream& s);
-        void insert(BaseNode* t,int pos,bool tag);
-        void remove(int pos);
+        void insert(BaseNode* t,int pos=0,bool tag=true);
+        void remove(int pos=-1);
+        void merge(BaseNode* r);
 
         BaseNode* root;
 };

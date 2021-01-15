@@ -135,7 +135,7 @@ ostream& LL::r_traverse(ostream& s)
     if pos is negative means reversingly traverse
     default args means insert before the root 
 */
-void LL::insert(BaseNode* t, int pos = 0,bool tag = true)
+void LL::insert(BaseNode* t, int pos ,bool tag )
 {
     if(root==nullptr){ root = t; return; }
     BaseNode* tmp = root;
@@ -164,7 +164,7 @@ void LL::insert(BaseNode* t, int pos = 0,bool tag = true)
     if pos is negative means reversingly traverse
     default arg means remove the last element
 */
-void LL::remove(int pos = -1)
+void LL::remove(int pos )
 {
     if(root == nullptr) return;
     if(root->next == nullptr)
@@ -184,29 +184,10 @@ void LL::remove(int pos = -1)
     return;
 }
 
-int main()
+/*
+    merge 2 LL
+*/
+void LL::merge(BaseNode* r)
 {
-    /*
-    BaseNode* p1 = new Node<int>(100);
-    BaseNode* p2 = new Node<double>(20.1,p1);
-    BaseNode* p3 = new Node<char>('a',p2,p1);
-    p1->link(p3,p2);
-    p2->link(nullptr,p3);
-    */
-    string s(R"(3.1 ,2,3,"hello",'x' )");//,"hello world!",'x')");
-    //string s(R"()");
-    LL l(s);
-    l.traverse(cout)<<"\n";
-    //l.r_traverse(cout);
-    /*
-    BaseNode* p = new Node<string>("hi!");
-    l.insert(p);//,1,false);
-    l.traverse(cout)<<"\n";
-    */
-    l.remove();
-    l.traverse(cout)<<"\n";
-    l.remove(0);
-    l.traverse(cout)<<"\n";
 
-    return 0;
 }
