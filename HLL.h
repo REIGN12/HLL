@@ -43,6 +43,7 @@ class LL
         ostream& traverse(ostream& s);
         ostream& r_traverse(ostream& s);
         void insert(BaseNode* t,int pos,bool tag);
+        void remove(int pos);
 
         BaseNode* root;
 };

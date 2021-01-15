@@ -130,9 +130,11 @@ ostream& LL::r_traverse(ostream& s)
     return s;
 }
 
-/* insert an element (if tag then ahead else behind) pos */
-/* if pos is negative means reversingly traverse*/
-/* default args means insert before the root */
+/*  
+    INSERT an element before or after pos
+    if pos is negative means reversingly traverse
+    default args means insert before the root 
+*/
 void LL::insert(BaseNode* t, int pos = 0,bool tag = true)
 {
     if(root==nullptr){ root = t; return; }
@@ -157,6 +159,31 @@ void LL::insert(BaseNode* t, int pos = 0,bool tag = true)
     }
 }
 
+/*
+    REMOVE the element in pos
+    if pos is negative means reversingly traverse
+    default arg means remove the last element
+*/
+void LL::remove(int pos = -1)
+{
+    if(root == nullptr) return;
+    if(root->next == nullptr)
+    {
+        delete root;
+    }
+    else
+    {
+        BaseNode* tmp = root;
+        if(pos > 0)for(int i = 0 ;i<pos;++i) tmp = tmp->next;
+        if(pos < 0)for(int i = 0;i<-pos;++i) tmp = tmp->forward;
+        tmp->forward->link_n(tmp->next);
+        tmp->next->link_f(tmp->forward);
+        if(pos == 0) root = root->next;
+        delete tmp;
+    }
+    return;
+}
+
 int main()
 {
     /*
@@ -166,13 +193,20 @@ int main()
     p1->link(p3,p2);
     p2->link(nullptr,p3);
     */
-    //string s(R"(3.1 ,2,3,"hello",'x' )");//,"hello world!",'x')");
-    string s(R"()");
+    string s(R"(3.1 ,2,3,"hello",'x' )");//,"hello world!",'x')");
+    //string s(R"()");
     LL l(s);
     l.traverse(cout)<<"\n";
     //l.r_traverse(cout);
+    /*
     BaseNode* p = new Node<string>("hi!");
     l.insert(p);//,1,false);
     l.traverse(cout)<<"\n";
+    */
+    l.remove();
+    l.traverse(cout)<<"\n";
+    l.remove(0);
+    l.traverse(cout)<<"\n";
+
     return 0;
 }
