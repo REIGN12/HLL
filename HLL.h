@@ -47,9 +47,9 @@ class LL
         LL(BaseNode* _root):root{_root}{}
         LL(LL& l)
         {
-            this->root = l.root->clone();
             if(l.root != nullptr)
             {
+                this->root = l.root->clone();
                 BaseNode* tmp = l.root;
                 BaseNode* ntmp = this->root;
                 BaseNode* ntmp_n;
@@ -67,6 +67,11 @@ class LL
                     this->root->link_f(ntmp);
                 }
             }
+            else
+            {
+                this->root = nullptr;
+            }
+            
         }
         ~LL();
         // Construct from legal string

@@ -69,7 +69,7 @@ LL::LL(string& s)
             tmp = tmpn;
         }
     }
-    if(root != nullptr)
+    if(root != nullptr && tmp != root)
     {
         root->link_f(tmp);
         tmp->link_n(root);
