@@ -15,7 +15,7 @@ LL::LL(string& s)
     auto end = sregex_token_iterator();
     vector<string> terms(sregex_token_iterator(s.begin(),s.end(),re_comma,-1),end);
     //if(1 == terms.size())
-    regex re_double(R"(\.)"),re_char(R"(')"),re_string(R"(")");
+    regex re_double(R"(\.)"),re_char(R"(')"),re_string(R"(")"),re_num(R"([0-9])");
     
     BaseNode* tmp=nullptr;
     BaseNode* tmpn = nullptr;
@@ -49,7 +49,7 @@ LL::LL(string& s)
             }
             else tmpn = new Node<string>(terms[i]);
         }
-        else
+        else if(regex_search(terms[i],re_num))
         {
             if(i==0)
             {
@@ -58,6 +58,10 @@ LL::LL(string& s)
             }
             else tmpn = new Node<int>(stoi(terms[i]));
         }
+        else
+        {
+            root = nullptr;
+        }
         if(0!=i)
         {
             tmp->link_n(tmpn);
@@ -65,8 +69,11 @@ LL::LL(string& s)
             tmp = tmpn;
         }
     }
-    root->link_f(tmp);
-    tmp->link_n(root);
+    if(root != nullptr)
+    {
+        root->link_f(tmp);
+        tmp->link_n(root);
+    }
 }
 
 LL::~LL()
@@ -123,6 +130,32 @@ ostream& LL::r_traverse(ostream& s)
     return s;
 }
 
+/* insert an element (if tag then ahead else behind) pos */
+/* if pos is negative means reversingly traverse*/
+/* default args means insert before the root */
+void LL::insert(BaseNode* t, int pos = 0,bool tag = true)
+{
+    if(root==nullptr){ root = t; return; }
+    BaseNode* tmp = root;
+    if(pos > 0) for(int i = 0; i<pos; ++i) tmp = tmp->next;
+    if(pos < 0) for(int i = 0;i<-pos;++i) tmp = tmp->forward;
+    BaseNode* tmp1;
+    if(tag)
+    {
+        tmp1 = tmp->forward;
+        t->link(tmp1,tmp);
+        tmp1->link_n(t);
+        tmp->link_f(t);
+        if(pos == 0) root = t;
+    }
+    else
+    {
+        tmp1 = tmp->next;
+        t->link(tmp,tmp1);
+        tmp1->link_f(t);
+        tmp->link_n(t);
+    }
+}
 
 int main()
 {
@@ -133,9 +166,13 @@ int main()
     p1->link(p3,p2);
     p2->link(nullptr,p3);
     */
-    string s(R"(3.1 ,2,3,"hello" )");//,"hello world!",'x')");
+    //string s(R"(3.1 ,2,3,"hello",'x' )");//,"hello world!",'x')");
+    string s(R"()");
     LL l(s);
     l.traverse(cout)<<"\n";
-    l.r_traverse(cout);
+    //l.r_traverse(cout);
+    BaseNode* p = new Node<string>("hi!");
+    l.insert(p);//,1,false);
+    l.traverse(cout)<<"\n";
     return 0;
 }
