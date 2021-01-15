@@ -189,5 +189,37 @@ void LL::remove(int pos )
 */
 void LL::merge(BaseNode* r)
 {
-
+    if(root == nullptr) {root = r;return;}
+    if(root -> next == nullptr)
+    {
+        root ->next = r;
+        if(r -> next == nullptr)
+        {
+            root->forward = r;
+            r->link(root,root);
+        }
+        else
+        {
+            root->link_f(r->forward);
+            r->forward->link_n(root);
+            r->link_f(root);
+        }
+        
+    }
+    else
+    {
+        root->forward->link_n(r);
+        if(r->next == nullptr)
+        {
+            r->link(root->forward,root);
+            root->link_f(r);
+        }
+        else
+        {
+           BaseNode* tmp = r->forward;
+           r->link_f(root->forward);
+           tmp->link_n(root);
+           root->link_f(tmp); 
+        }
+    }
 }
